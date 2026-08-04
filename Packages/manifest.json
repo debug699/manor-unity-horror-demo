@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.coplaydev.unity-mcp": "file:com.coplaydev.unity-mcp",
     "com.unity.ai.navigation": "2.0.14",
     "com.unity.inputsystem": "1.19.0",
     "com.unity.render-pipelines.universal": "17.5.0",
