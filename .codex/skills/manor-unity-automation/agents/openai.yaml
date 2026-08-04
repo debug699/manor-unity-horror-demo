@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园 Unity 自动化"
+  short_description: "初始化、验证场景、测试与自动化检查流程，适合项目技术任务"
+  default_prompt: "Use $manor-unity-automation to validate and automate the Manor Unity project."

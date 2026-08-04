@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园剧情维护"
+  short_description: "维护时间线、线索、对白与剧情设定的一致性，适合叙事内容修改"
+  default_prompt: "Use $manor-story-maintenance to revise Manor story content without breaking canon."

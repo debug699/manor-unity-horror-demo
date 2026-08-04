@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园视觉验收"
+  short_description: "检查灰盒、灯光、材质、UI与截图的视觉一致性，适合画面验收"
+  default_prompt: "Use $manor-visual-acceptance to inspect a Manor scene or screenshot."

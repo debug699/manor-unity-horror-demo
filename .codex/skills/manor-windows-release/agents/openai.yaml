@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园 Windows 发布"
+  short_description: "验证、构建、打包与冒烟测试 Windows Demo，适合版本发布准备"
+  default_prompt: "Use $manor-windows-release to validate and build the Manor Windows demo."

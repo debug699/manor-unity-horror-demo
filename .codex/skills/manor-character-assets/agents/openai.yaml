@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园角色资产"
+  short_description: "检查角色模型、材质、动画、骨骼与Prefab导入，适合角色资源制作"
+  default_prompt: "Use $manor-character-assets to check a Manor character asset before import."

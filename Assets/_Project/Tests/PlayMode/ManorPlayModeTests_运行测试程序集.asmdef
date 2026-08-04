@@ -1,0 +1,19 @@
+{
+  "name": "Manor.PlayModeTests",
+  "rootNamespace": "Manor.Tests.PlayMode",
+  "references": [
+    "Manor.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

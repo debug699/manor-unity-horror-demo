@@ -1,0 +1,4 @@
+interface:
+  display_name: "庄园恐怖追逐"
+  short_description: "设计无战斗恐怖演出、躲藏与屠夫追逐流程，适合恐怖玩法设计"
+  default_prompt: "Use $manor-horror-chase to design a fair non-combat Manor horror sequence."

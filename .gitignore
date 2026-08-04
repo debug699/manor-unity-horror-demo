@@ -1,0 +1,28 @@
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]nityPackageManager/
+[Uu]ser[Ss]ettings/
+*.tmp
+*.log
+*.csproj
+*.sln
+*.suo
+*.user
+.vs/
+
+# Generated IDE and OS files
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+
+# Local test output
+TestResults/
+CrashReports/
+AutomationLogs/
+Builds/
