@@ -10,6 +10,8 @@
         { "name": "Run", "type": "Button", "id": "87e5323c-bd5b-4c37-8900-b8c6bf63ed73", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
         { "name": "Crouch", "type": "Button", "id": "c0c19492-4b2c-493e-b433-21b1da7a1aac", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
         { "name": "Interact", "type": "Button", "id": "b06b75ce-e532-49bc-8223-e61f782739bd", "expectedControlType": "Button", "processors": "", "interactions": "Press", "initialStateCheck": false },
+        { "name": "Pickup", "type": "Button", "id": "f87db65a-2f1a-4d1f-aea2-3d8b1f5df701", "expectedControlType": "Button", "processors": "", "interactions": "Press", "initialStateCheck": false },
+        { "name": "UseItem", "type": "Button", "id": "2c4bb6a5-79e7-46c1-bf42-4a3ee20e62e3", "expectedControlType": "Button", "processors": "", "interactions": "Hold(duration=5)", "initialStateCheck": false },
         { "name": "Clues", "type": "Button", "id": "0bbc722f-dd5c-49bc-b39b-b07bb7997726", "expectedControlType": "Button", "processors": "", "interactions": "Press", "initialStateCheck": false },
         { "name": "Pause", "type": "Button", "id": "16d300ec-10c8-4687-a3a0-638d0482fc18", "expectedControlType": "Button", "processors": "", "interactions": "Press", "initialStateCheck": false }
       ],
@@ -23,6 +25,8 @@
         { "name": "", "id": "4688818d-cb1c-4509-bde7-822159f2608c", "path": "<Keyboard>/leftShift", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Run", "isComposite": false, "isPartOfComposite": false },
         { "name": "", "id": "7725348e-fbd8-479e-b176-28634485a567", "path": "<Keyboard>/leftCtrl", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Crouch", "isComposite": false, "isPartOfComposite": false },
         { "name": "", "id": "50b7e55c-0f4c-45cf-a8c5-e14aeb03dd94", "path": "<Keyboard>/e", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Interact", "isComposite": false, "isPartOfComposite": false },
+        { "name": "", "id": "f4a7d9f1-65dd-4e5d-a5e6-4e0a3e44c8f1", "path": "<Keyboard>/f", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Pickup", "isComposite": false, "isPartOfComposite": false },
+        { "name": "", "id": "b6f89c8f-4c84-47cc-969c-76f51c4f6c04", "path": "<Keyboard>/k", "interactions": "Hold(duration=5)", "processors": "", "groups": "KeyboardMouse", "action": "UseItem", "isComposite": false, "isPartOfComposite": false },
         { "name": "", "id": "5cc9cbae-8fd5-4a97-92cc-33965e32fbde", "path": "<Keyboard>/tab", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Clues", "isComposite": false, "isPartOfComposite": false },
         { "name": "", "id": "a13b50a8-dd35-4f89-8d86-c39268c1cfbc", "path": "<Keyboard>/escape", "interactions": "", "processors": "", "groups": "KeyboardMouse", "action": "Pause", "isComposite": false, "isPartOfComposite": false }
       ]
