@@ -5,6 +5,7 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine.InputSystem;
 using Manor.Narrative;
+using UnityEngine;
 
 namespace Manor.Tests.EditMode
 {
@@ -37,6 +38,9 @@ namespace Manor.Tests.EditMode
             Assert.That(service.MarkClueRead("CLUE_NOTE_TEST_01"), Is.False);
             Assert.That(service.Snapshot.collectedKeys, Has.Count.EqualTo(1));
             Assert.That(service.Snapshot.readClues, Has.Count.EqualTo(1));
+            Assert.That(service.AddItem("ITEM_FLASHLIGHT_DEAD"), Is.True);
+            Assert.That(service.AddItem("ITEM_FLASHLIGHT_DEAD"), Is.False);
+            Assert.That(service.HasItem("ITEM_FLASHLIGHT_DEAD"), Is.True);
         }
 
         [Test]
@@ -61,6 +65,18 @@ namespace Manor.Tests.EditMode
             Assert.That(service.Snapshot.storyStage, Is.EqualTo(StoryStage.FindFirstKey));
         }
 
+        [Test]
+        public void CheckpointUpdatesIdAndSafePositionAtomically()
+        {
+            GameStateService service = new GameStateService();
+            Vector3 position = new Vector3(7f, -3f, -8f);
+
+            Assert.That(service.SetCheckpoint("CHECKPOINT_CHASE_START", position), Is.True);
+            Assert.That(service.SetCheckpoint("CHECKPOINT_CHASE_START", position), Is.False);
+            Assert.That(service.Snapshot.checkpointId, Is.EqualTo("CHECKPOINT_CHASE_START"));
+            Assert.That(service.Snapshot.lastSafePosition, Is.EqualTo(position));
+        }
+
         [TestCase("SCN_ManorDemo_庄园Demo", ProjectIds.SceneManorDemo)]
         [TestCase("SCN_MainMenu_主菜单", ProjectIds.SceneMainMenu)]
         [TestCase("SCN_Boot_启动场景", ProjectIds.SceneBoot)]
@@ -79,8 +95,17 @@ namespace Manor.Tests.EditMode
                 state.SetScene("SCN_MANOR_DEMO");
                 state.SetObjective("OBJ_TEST_INTERACTIONS");
                 state.AddKey("KEY_STORAGE_01");
+                state.AddItem("ITEM_MATCHBOX");
                 state.MarkClueRead("CLUE_NOTE_TEST_01");
                 state.SetDoorOpen("INT_DOOR_TEST_01", true);
+                state.SetGatePasswordKnown(true);
+                state.SetCommunicationComplete(true);
+                state.SetButcherChaseStarted(true);
+                state.SetChaseElapsedSeconds(123.5f);
+                state.SetDawnTriggered(true);
+                state.SetBridgeRestored(true);
+                state.SetGateUnlocked(true);
+                state.SetCheckpoint("CHECKPOINT_DAWN", new Vector3(1f, 2f, 3f));
                 JsonAutoSaveService save = new JsonAutoSaveService(directory);
 
                 save.Save(state.Snapshot);
@@ -89,8 +114,18 @@ namespace Manor.Tests.EditMode
                 Assert.That(loaded.sceneId, Is.EqualTo("SCN_MANOR_DEMO"));
                 Assert.That(loaded.objectiveId, Is.EqualTo("OBJ_TEST_INTERACTIONS"));
                 Assert.That(loaded.collectedKeys, Contains.Item("KEY_STORAGE_01"));
+                Assert.That(loaded.collectedItems, Contains.Item("ITEM_MATCHBOX"));
                 Assert.That(loaded.readClues, Contains.Item("CLUE_NOTE_TEST_01"));
                 Assert.That(loaded.openDoors, Contains.Item("INT_DOOR_TEST_01"));
+                Assert.That(loaded.gatePasswordKnown, Is.True);
+                Assert.That(loaded.communicationComplete, Is.True);
+                Assert.That(loaded.butcherChaseStarted, Is.True);
+                Assert.That(loaded.chaseElapsedSeconds, Is.EqualTo(123.5f).Within(.01f));
+                Assert.That(loaded.dawnTriggered, Is.True);
+                Assert.That(loaded.bridgeRestored, Is.True);
+                Assert.That(loaded.gateUnlocked, Is.True);
+                Assert.That(loaded.checkpointId, Is.EqualTo("CHECKPOINT_DAWN"));
+                Assert.That(loaded.lastSafePosition, Is.EqualTo(new Vector3(1f, 2f, 3f)));
             }
             finally
             {
@@ -110,11 +145,13 @@ namespace Manor.Tests.EditMode
             Assert.That(gameplay.FindAction("Run", true).bindings, Has.Some.Property("effectivePath").Contains("leftShift"));
             Assert.That(gameplay.FindAction("Crouch", true).bindings, Has.Some.Property("effectivePath").Contains("leftCtrl"));
             Assert.That(gameplay.FindAction("Interact", true).bindings, Has.Some.Property("effectivePath").Contains("/e"));
+            Assert.That(gameplay.FindAction("Pickup", true).bindings, Has.Some.Property("effectivePath").Contains("/f"));
+            Assert.That(gameplay.FindAction("UseItem", true).bindings, Has.Some.Property("effectivePath").Contains("/k"));
             Assert.That(gameplay.FindAction("Clues", true).bindings, Has.Some.Property("effectivePath").Contains("tab"));
             Assert.That(gameplay.FindAction("Pause", true).bindings, Has.Some.Property("effectivePath").Contains("escape"));
         }
 
-        [TestCase("PROMPT_PICKUP_KEY", "按 E 拾取钥匙")]
+        [TestCase("PROMPT_PICKUP_KEY", "按 F 拾取钥匙")]
         [TestCase("PROMPT_LOCKED_DOOR", "需要钥匙")]
         [TestCase("PROMPT_READ_NOTE", "按 E 阅读纸条")]
         [TestCase("KEY_ADDED", "已获得钥匙")]

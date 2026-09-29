@@ -3,7 +3,8 @@
   "rootNamespace": "Manor.Tests.EditMode",
   "references": [
     "Manor.Runtime",
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.AI.Navigation"
   ],
   "includePlatforms": [
     "Editor"

@@ -19,18 +19,15 @@ namespace Manor.Tests.EditMode
         }
 
         [Test]
-        public void GroundAndUpperRoomsUseDistinctFloors()
+        public void ConfirmedGroundAndUpperRoomsUseDistinctFloors()
         {
-            Transform environment = Find("Environment_环境");
-            Transform ground = FindChild(environment, "GroundLevel_一层区域");
-            Transform upper = FindChild(environment, "UpperLevel_二层区域");
-
-            AssertNames(ground, "EntranceHall_玄关", "LivingRoom_客厅", "Kitchen_厨房", "StorageRoom_储藏室",
-                "MainCorridor_主走廊", "Stairwell_楼梯间", "BackDoorPassage_后门通道", "TransitionRoom_地下入口上方过渡房");
-            AssertNames(upper, "PregnantRoom_孕妇房间", "ChildrenRoom_儿童房", "PrayerRoom_祷告室", "ButcherStudy_屠夫研究室");
-
-            Assert.That(FindChild(upper, "PregnantRoom_孕妇房间").position.y, Is.GreaterThan(3f));
-            Assert.That(FindChild(ground, "EntranceHall_玄关").position.y, Is.LessThan(0.5f));
+            Transform layout = Find("ManagedInteriorV2_连续主楼布局");
+            Transform ground = FindChild(layout, "GroundFloor_G01-G07_一层");
+            Transform upper = FindChild(layout, "UpperFloor_G08-G12_二层");
+            AssertNames(ground, "G01_玄关", "G02_客厅套间", "G03_厨房套间", "G04_屠宰工作间", "G05_主走廊", "G06_楼梯间", "G07_后门通道");
+            AssertNames(upper, "G08_孕妇房间套间", "G09_儿童房双区", "G10_屠夫研究室", "G11_祷告室", "G12_旧客房与封闭过渡空间");
+            Assert.That(FindChild(upper, "G12_旧客房与封闭过渡空间").position.y, Is.GreaterThan(3f));
+            Assert.That(FindChild(ground, "G01_玄关").position.y, Is.LessThan(.5f));
         }
 
         [Test]
@@ -43,43 +40,31 @@ namespace Manor.Tests.EditMode
             Assert.That(Find("BackDoorPassage_后门通道_Doorway_North_门洞"), Is.Not.Null);
             Assert.That(Find("TransitionRoom_地下入口上方过渡房_Doorway_North_门洞"), Is.Not.Null);
 
-            Transform mainStair = Find("MainStair_主楼梯");
-            Transform basementStair = Find("BasementStair_地下入口楼梯");
-            Assert.That(CountChildrenContaining(mainStair, "_Step_台阶_"), Is.EqualTo(18));
-            Assert.That(CountChildrenContaining(basementStair, "_Step_台阶_"), Is.EqualTo(15));
-            Assert.That(Find("MainStair_主楼梯_Top_顶部").position.y, Is.GreaterThan(3f));
-            Assert.That(Find("BasementStair_地下入口楼梯_Top_顶部").position.y, Is.LessThan(-2.5f));
-            Assert.That(Find("MainStair_主楼梯_Top_顶部").position.z, Is.GreaterThan(7f));
-            Assert.That(Find("MainCorridor_主走廊_Wall_North_整墙"), Is.Null);
-            Assert.That(Find("MainCorridor_主走廊_Wall_South_整墙"), Is.Null);
+            Assert.That(CountChildrenContaining(Find("G06_实体楼梯"), "_Step_"), Is.EqualTo(18));
+            Assert.That(CountChildrenContaining(Find("G03_活板门至B01"), "_Step_"), Is.EqualTo(16));
+            Assert.That(Find("G06_地下楼梯"), Is.Null);
         }
 
         [Test]
         public void BasementAndOutdoorRouteAreConnectedAndPresent()
         {
-            Assert.That(Find("BasementEntrance_地下入口"), Is.Not.Null);
-            Assert.That(Find("BasementPassage_地下连接通道"), Is.Not.Null);
-            Assert.That(Find("RitualChamber_地下祭祀室"), Is.Not.Null);
-            Assert.That(Find("BackDoorThreshold_后门门槛"), Is.Not.Null);
-            Assert.That(Find("Shed_A_废弃木屋A"), Is.Not.Null);
-            Assert.That(Find("Shed_B_废弃木屋B"), Is.Not.Null);
-            Assert.That(Find("BrokenBridge_断桥灰盒测试桥面"), Is.Not.Null);
-            Assert.That(Find("ManorGateRoad_庄园大门道路"), Is.Not.Null);
-            Assert.That(Find("Gate_庄园大门"), Is.Not.Null);
+            Assert.That(Find("G03_活板门至B01"), Is.Not.Null);
+            Assert.That(Find("B01_地下服务路线"), Is.Not.Null);
+            Assert.That(Find("B02_地下祭祀室"), Is.Not.Null);
+            Assert.That(Find("PF_UserWorkshopHut_加工木屋主用"), Is.Not.Null);
+            Assert.That(Find("PF_UserAbandonedHut_废弃木屋主用"), Is.Not.Null);
+            Assert.That(Find("PF_UserStoneWorkshop_木石工坊主用"), Is.Not.Null);
+            Assert.That(Find("PF_UserWoodBridge_用户木桥"), Is.Not.Null);
+            Assert.That(Find("PF_UserGate_用户大门"), Is.Not.Null);
         }
 
         [Test]
         public void GreyboxContainsExactlyTwelveGroundRoomsPlusBasementChamber()
         {
-            string[] roomNames =
-            {
-                "EntranceHall_玄关", "LivingRoom_客厅", "MainCorridor_主走廊", "Kitchen_厨房", "StorageRoom_储藏室",
-                "Stairwell_楼梯间", "PregnantRoom_孕妇房间", "ChildrenRoom_儿童房", "PrayerRoom_祷告室",
-                "ButcherStudy_屠夫研究室", "BackDoorPassage_后门通道", "TransitionRoom_地下入口上方过渡房"
-            };
+            string[] roomNames = { "G01_玄关", "G02_客厅套间", "G03_厨房套间", "G04_屠宰工作间", "G05_主走廊", "G06_楼梯间", "G07_后门通道", "G08_孕妇房间套间", "G09_儿童房双区", "G10_屠夫研究室", "G11_祷告室", "G12_旧客房与封闭过渡空间" };
 
             foreach (string roomName in roomNames) Assert.That(Find(roomName), Is.Not.Null, roomName);
-            Assert.That(Find("RitualChamber_地下祭祀室"), Is.Not.Null);
+            Assert.That(Find("B02_地下祭祀室"), Is.Not.Null);
         }
 
         private Transform Find(string objectName)
