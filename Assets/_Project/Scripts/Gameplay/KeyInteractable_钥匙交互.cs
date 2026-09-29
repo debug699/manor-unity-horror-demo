@@ -8,6 +8,7 @@ namespace Manor.Gameplay
     {
         [SerializeField] private StableId _keyId;
         [SerializeField] private bool _hideAfterPickup = true;
+        public override InteractionAction RequiredAction => InteractionAction.Pickup;
 
         public void ConfigureKey(string interactionId, string keyId)
         {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -40,6 +41,19 @@ namespace Manor.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("[Manor][Automation] 初始化完成 / Initialization completed.");
+        }
+
+        [MenuItem("庄园/自动化/更新试玩启动入口")]
+        public static void ConfigureDemoBootEntry()
+        {
+            EnsureFolders();
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            GameObject root = new GameObject("Boot_初始化入口");
+            root.AddComponent<DemoBootLoader>();
+            SaveScene(scene, ProductionScenes + "/SCN_Boot_启动场景.unity");
+            ConfigureBuildSettings();
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Manor][Automation] Demo boot entry configured.");
         }
 
         [MenuItem("庄园/自动化/创建测试场景")]
@@ -168,7 +182,9 @@ namespace Manor.Editor
             EditorBuildSettingsScene[] enabledScenes = Array.FindAll(EditorBuildSettings.scenes, scene => scene.enabled);
             string[] scenes = Array.ConvertAll(enabledScenes, scene => scene.path);
             if (scenes.Length == 0) throw new InvalidOperationException("没有可构建场景 / No scenes configured.");
-            BuildPipeline.BuildPlayer(scenes, "Builds/Windows/ManorDemo.exe", BuildTarget.StandaloneWindows64, BuildOptions.None);
+            BuildReport report = BuildPipeline.BuildPlayer(scenes, "Builds/Windows/ManorDemo.exe", BuildTarget.StandaloneWindows64, BuildOptions.None);
+            if (report.summary.result != BuildResult.Succeeded)
+                throw new InvalidOperationException("Windows 构建失败 / Windows build failed: " + report.summary.result);
             Debug.Log("[Manor][Automation] Windows 构建完成 / Windows build completed.");
         }
 
@@ -205,7 +221,7 @@ namespace Manor.Editor
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             GameObject root = new GameObject("Boot_初始化入口");
-            CreateChild(root, "SceneFlowService_场景流程服务");
+            root.AddComponent<DemoBootLoader>();
             SaveScene(scene, ProductionScenes + "/SCN_Boot_启动场景.unity");
         }
 
@@ -699,7 +715,8 @@ namespace Manor.Editor
             {
                 ProductionScenes + "/SCN_Boot_启动场景.unity",
                 ProductionScenes + "/SCN_MainMenu_主菜单.unity",
-                ProductionScenes + "/SCN_ManorDemo_庄园Demo.unity"
+                ProductionScenes + "/SCN_ManorDemo_庄园Demo.unity",
+                ProductionScenes + "/SCN_ManorInteriorV1_室内首版.unity"
             };
             List<EditorBuildSettingsScene> scenes = new List<EditorBuildSettingsScene>();
             foreach (string path in paths) scenes.Add(new EditorBuildSettingsScene(path, true));

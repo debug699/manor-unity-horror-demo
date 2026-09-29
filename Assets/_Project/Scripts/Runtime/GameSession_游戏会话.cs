@@ -68,6 +68,13 @@ namespace Manor.Runtime
             return true;
         }
 
+        public void StartNewGame()
+        {
+            GameState.Restore(new GameStateData());
+            JsonAutoSaveService save = _autoSave as JsonAutoSaveService;
+            if (save != null && System.IO.File.Exists(save.SavePath)) System.IO.File.Delete(save.SavePath);
+        }
+
         public void NotifyClue(string title, string body) => ClueRequested?.Invoke(title, body);
         public void NotifyFeedback(string textKey) => FeedbackRequested?.Invoke(textKey);
 

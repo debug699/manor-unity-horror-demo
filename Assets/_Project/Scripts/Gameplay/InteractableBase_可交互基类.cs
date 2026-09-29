@@ -9,6 +9,7 @@ namespace Manor.Gameplay
         [SerializeField] private StableId _interactionId;
 
         public string InteractionId => _interactionId.Value;
+        public virtual InteractionAction RequiredAction => InteractionAction.Interact;
 
         public abstract bool CanInteract(InteractionContext context);
         public abstract string GetPromptKey(InteractionContext context);

@@ -21,17 +21,25 @@ namespace Manor.Player
         private CharacterController _controller;
         private float _verticalVelocity;
         private bool _isCrouching;
+        private float _nextRunNoiseAt;
 
         public bool IsCrouching => _isCrouching;
         public float CurrentSpeed { get; private set; }
+        public bool InputLocked { get; private set; }
+
+        public void SetInputLocked(bool locked)
+        {
+            InputLocked = locked;
+            if (locked) CurrentSpeed = 0f;
+        }
 
         public void Configure(PlayerInputReader input, FirstPersonCamera view, InteractionScanner scanner)
         {
-            if (enabled && _input != null) _input.InteractPressed -= OnInteract;
+            if (enabled && _input != null) UnbindInteractionInput();
             _input = input;
             _view = view;
             _interactionScanner = scanner;
-            if (enabled && _input != null) _input.InteractPressed += OnInteract;
+            if (enabled && _input != null) BindInteractionInput();
         }
 
         private void Awake()
@@ -42,7 +50,7 @@ namespace Manor.Player
 
         private void OnEnable()
         {
-            if (_input != null) _input.InteractPressed += OnInteract;
+            if (_input != null) BindInteractionInput();
         }
 
         private void Start()
@@ -53,12 +61,12 @@ namespace Manor.Player
 
         private void OnDisable()
         {
-            if (_input != null) _input.InteractPressed -= OnInteract;
+            if (_input != null) UnbindInteractionInput();
         }
 
         private void Update()
         {
-            if (Time.timeScale <= 0f) return;
+            if (Time.timeScale <= 0f || InputLocked) return;
             UpdateCrouch(_input.CrouchHeld);
             _view?.ApplyLook(_input.Look);
             Move(_input.Move, _input.RunHeld);
@@ -74,7 +82,13 @@ namespace Manor.Player
             _verticalVelocity += _gravity * Time.deltaTime;
             Vector3 velocity = planar * CurrentSpeed + Vector3.up * _verticalVelocity;
             _controller.Move(velocity * Time.deltaTime);
+            if (runHeld && !_isCrouching && planar.sqrMagnitude > .1f && Time.time >= _nextRunNoiseAt)
+            {
+                _nextRunNoiseAt = Time.time + .45f;
+                NoiseBus.Emit(transform.position, 13f, gameObject);
+            }
         }
+
 
         public void UpdateCrouch(bool crouchHeld)
         {
@@ -118,5 +132,21 @@ namespace Manor.Player
         }
 
         private void OnInteract() => _interactionScanner?.TryInteract();
+        private void OnPickup() => _interactionScanner?.TryInteract(InteractionAction.Pickup);
+        private void OnUseItemCompleted() => _interactionScanner?.TryInteract(InteractionAction.HoldUse);
+
+        private void BindInteractionInput()
+        {
+            _input.InteractPressed += OnInteract;
+            _input.PickupPressed += OnPickup;
+            _input.UseItemCompleted += OnUseItemCompleted;
+        }
+
+        private void UnbindInteractionInput()
+        {
+            _input.InteractPressed -= OnInteract;
+            _input.PickupPressed -= OnPickup;
+            _input.UseItemCompleted -= OnUseItemCompleted;
+        }
     }
 }

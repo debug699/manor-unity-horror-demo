@@ -18,6 +18,7 @@ namespace Manor.Gameplay
         private IGameStateService _gameState;
 
         public event Action<string> PromptChanged;
+        public event Action<IInteractable> Interacted;
         public IInteractable Current => _current;
         public float InteractionDistance => _interactionDistance;
 
@@ -47,13 +48,15 @@ namespace Manor.Gameplay
             return SetCurrent(null);
         }
 
-        public bool TryInteract()
+        public bool TryInteract(InteractionAction action = InteractionAction.Interact)
         {
             Scan();
             if (_current == null) return false;
+            if (_current.RequiredAction != action) return false;
             InteractionContext context = CreateContext();
             if (!_current.CanInteract(context)) return false;
             _current.Interact(context);
+            Interacted?.Invoke(_current);
             Scan();
             return true;
         }

@@ -2,7 +2,8 @@
   "name": "Manor.Runtime",
   "rootNamespace": "Manor",
   "references": [
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.AI.Navigation"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
